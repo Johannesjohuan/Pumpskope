@@ -11,14 +11,14 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-// Add this RIGHT after your requires, before anything else
+
 app.use((req, res, next) => {
-    // Allow requests from your domain
+    
     res.header('Access-Control-Allow-Origin', 'https://pumpskope.com');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     
-    // Handle preflight requests
+  
     if (req.method === 'OPTIONS') {
         return res.sendStatus(200);
     }
@@ -54,10 +54,10 @@ async function updateGlobalPrice() {
 setInterval(updateGlobalPrice, 30 * 60 * 1000);
 updateGlobalPrice();
 
-// Track user sessions
-const userSessions = new Map(); // which token each user is watching
-const analyzedTokens = new Map(); // cache analyzed tokens
-const processedSignatures = new Map(); // deduplicate transactions
+
+const userSessions = new Map();
+const analyzedTokens = new Map(); 
+const processedSignatures = new Map(); 
 
 wss.on('connection', (ws) => {
     console.log(`🔌 New WebSocket client connected. Total clients: ${wss.clients.size}`);
@@ -67,11 +67,11 @@ wss.on('connection', (ws) => {
             const { tokenCA } = JSON.parse(message);
             if (!tokenCA) return;
             
-            // Store which token this user is watching
+         
             userSessions.set(ws, tokenCA);
             console.log(`👤 User analyzing: ${tokenCA}`);
             
-            // Get token metadata
+           
             let tokenName = "Unknown Token";
             let tokenImage = null;
             try {
@@ -85,13 +85,13 @@ wss.on('connection', (ws) => {
                 console.log('Moralis metadata failed, using fallback');
             }
             
-            // Get dev wallet
+           
             const creator = await getDevWalletFromBitquery(tokenCA) || "Unknown";
             
-            // Get market cap - USING THE WORKING QUERY
+      
             const { marketCap } = await getTokenPriceFromBitquery(tokenCA);
             
-            // Get image
+           
             const imageUrl = tokenImage || await (async () => {
                 try {
                     const r = await fetch(`https://pumpportal.fun/api/token?mint=${tokenCA}`);
@@ -101,11 +101,11 @@ wss.on('connection', (ws) => {
                 }
             })();
             
-            // Get transactions - use cache if available
+        
             let trades = [];
             
             if (!analyzedTokens.has(tokenCA)) {
-                // First time analyzing this token - get full history
+                
                 console.log(`📊 First time analyzing ${tokenCA}, fetching full history...`);
                 trades = creator !== "Unknown" ? await getTokenTransactions(creator, tokenCA) : [];
                 analyzedTokens.set(tokenCA, {
@@ -113,15 +113,14 @@ wss.on('connection', (ws) => {
                     analyzedAt: Date.now()
                 });
             } else {
-                // Token already analyzed - get cached data
+              
                 console.log(`📊 Using cached data for ${tokenCA}`);
                 trades = analyzedTokens.get(tokenCA).transactions;
             }
             
-            // ALWAYS show ALL trades, every time
+      
             console.log(`👤 Showing all ${trades.length} trades`);
-            
-            // Send ALL trades to frontend
+           
             ws.send(JSON.stringify({ 
                 type: 'SUCCESS', 
                 mint: tokenCA, 
@@ -132,13 +131,13 @@ wss.on('connection', (ws) => {
                 trades: trades
             }));
             
-            // Show recursive notifications for THIS user
+         
             trades.forEach(tx => {
                 if (tx.action === "TRANSFER_OUT" && tx.recipient) {
-                    // Calculate percentage if not already there
+                 
                     const amountNum = parseFloat(tx.amount.replace(/[MK]/g, '')) * 
                         (tx.amount.includes('M') ? 1000000 : 1000);
-                    const totalSupply = 1000000000; // Default supply
+                    const totalSupply = 1000000000; 
                     const percentage = (amountNum / totalSupply * 100).toFixed(2);
                     
                     ws.send(JSON.stringify({
@@ -257,7 +256,7 @@ async function getDevWalletFromBitquery(tokenCA) {
     }
 }
 
-// ===== 🔥 FIXED BITQUERY PRICE FUNCTION - USING WORKING QUERY 🔥 =====
+
 async function getTokenPriceFromBitquery(tokenCA) {
     try {
         const query = `
