@@ -1,0 +1,2628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="icon" type="image/png" href="favicon-32x32.png">
+<link rel="icon" type="image/png" href="favicon-android-chrome-512x512.png">
+<link rel="icon" type="image/png" href="favicon-16x16.png">
+<link rel="icon" type="image/png" href="favicon-android-chrome-192x192.png">
+<link rel="icon" type="image/png" href="favicon-apple-touch-icon.png">
+<title>PumpSkope</title>
+<style>
+*, *::before, *::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body { 
+    height: 100%;
+    margin: 0; 
+    padding: 0;
+    background: #000000; 
+    color: #FFFFFF;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+    overflow: hidden; 
+}
+
+.app-wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+/* INTRO MODAL STYLES */
+.intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #0a0f18, #020409);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.6s ease;
+}
+
+.intro-card {
+    background: rgba(18, 24, 38, 0.75);
+    border: 1px solid rgba(21, 125, 255, 0.15);
+    padding: 40px;
+    border-radius: 16px;
+    width: 430px;
+    max-width: 90%;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(21, 125, 255, 0.15), 0 0 60px rgba(21, 125, 255, 0.08);
+}
+
+.intro-logo {
+    font-size: 42px;
+    margin-bottom: 12px;
+}
+
+.intro-card h1 {
+    font-size: 26px;
+    margin-bottom: 14px;
+    letter-spacing: 0.4px;
+    color: #fff;
+}
+
+.intro-text {
+    font-size: 14px;
+    color: #9fb0c5;
+    line-height: 1.6;
+    margin-bottom: 22px;
+}
+
+.intro-features {
+    text-align: left;
+    font-size: 14px;
+    color: #d3dbe6;
+    margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 3px solid #157DFF;
+}
+
+.intro-features div {
+    margin-bottom: 8px;
+}
+
+.intro-features div:last-child {
+    margin-bottom: 0;
+}
+
+.powered {
+    font-size: 12px;
+    color: #7c8ca3;
+    margin-bottom: 20px;
+}
+.powered-by {
+    margin-bottom: 20px;
+}
+
+.powered-by span {
+    display: block;
+    font-size: 12px;
+    color: #7c8ca3;
+    margin-bottom: 8px;
+}
+
+.logo-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.partner-logo {
+    height: 20px;
+    width: auto;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.partner-logo:hover {
+    opacity: 1;
+}
+
+.enter-btn {
+    background: linear-gradient(135deg, #157DFF, #00bcd4);
+    border: none;
+    padding: 12px 26px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 15px rgba(21, 125, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.enter-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(21, 125, 255, 0.6);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+
+
+.sidebar {
+    width: 120px;
+    background: #0A0A0A;
+    border-right: 1px solid #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: visible;
+}
+
+.sidebar-logo {
+    width: 60px;
+    height: 60px;
+    background: #111;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    border: 1px solid #333;
+    cursor: default;
+}
+
+.sidebar-logo img {
+    width: 40px;
+    height: 40px;
+    opacity: 0.9;
+}
+
+.sidebar-item {
+    width: 100%;
+    padding: 15px 0;
+    text-align: center;
+    color: #888;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-item:hover {
+    color: #157DFF;
+    background: rgba(21,125,255,0.05);
+    border-left-color: #157DFF;
+}
+
+.sidebar-divider {
+    width: 80%;
+    height: 1px;
+    background: #222;
+    margin: 10px 0 20px 0;
+}
+
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    height: 100%;
+    padding: 20px;
+}
+
+.main-wrapper {
+    display: grid;
+    place-items: center; 
+    align-content: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+}
+
+#notification-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+}
+
+@media (min-width: 768px) {
+    #notification-container { left: auto; width: 360px; }
+    
+}
+
+.transfer-notif {
+    background: rgba(17, 17, 17, 0.95);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid #157DFF;
+    font-size: 13px;
+    backdrop-filter: blur(10px);
+    animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+#copy-alert {
+    position: fixed;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #157DFF;
+    padding: 10px 25px;
+    border-radius: 30px;
+    font-weight: 800;
+    font-size: 11px;
+    z-index: 10000;
+    transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#copy-alert.show { bottom: 25px; }
+
+.header { 
+    text-align: center; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 25px;
+    gap: 39px;
+}
+
+.logo-container {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.logo-img {
+    height: auto;
+    width: 100%; 
+    max-width: 500px;
+    margin-bottom: -15px;
+    display: block;
+    position: relative;
+    z-index: 2;
+}
+
+.logo-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(21,125,255,0.1), rgba(21,125,255,0.4), rgba(21,125,255,0.1), transparent);
+    transform: skewX(-25deg);
+    z-index: 3;
+    animation: scan 4s infinite ease-in-out;
+}
+
+@keyframes scan {
+    0% { left: -100%; }
+    30% { left: 150%; }
+    100% { left: 150%; }
+}
+
+.tagline-container {
+    margin-bottom: 20px;
+    padding: 0 17px;
+}
+
+.tagline {
+    color: #157DFF;
+    font-size: clamp(22px, 6.5vw, 34px);
+    font-weight: 380;
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: 2px;
+    line-height: 1.1;
+}
+
+
+.sub-tagline {
+    display: block;
+    font-size: clamp(10px, 3.2vw, 13px);
+    font-weight: 400;
+    color: rgba(255,255,255,0.4);
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+}
+
+.search-area { 
+    width: 100%;
+    max-width: 620px;
+    display: flex; 
+    flex-direction: column;
+    background: #0A0A0A; 
+    border: 1px solid #222222; 
+    border-radius: 15px;
+    padding: 6px;
+    gap: 6px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    transition: all 0.3s ease;
+}
+
+.search-area:focus-within { border-color: #157DFF; box-shadow: 0 0 15px rgba(21,125,255,0.2); }
+
+@media (min-width: 600px) {
+    .search-area { flex-direction: row; border-radius: 50px; gap: 0; }
+}
+
+input { 
+    flex: 1; 
+    border: none; 
+    padding: 16px 24px; 
+    font-size: 15px; 
+    background: transparent;
+    color: #FFFFFF;
+    outline: none;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+}
+
+@media (min-width: 600px) { input { text-align: left; } }
+
+button.scan-btn { 
+    background: #157DFF; 
+    color: #FFFFFF; 
+    border: none; 
+    padding: 16px 35px; 
+    font-weight: 900; 
+    cursor: pointer;
+    border-radius: 12px;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    letter-spacing: 1.5px;
+}
+
+@media (min-width: 600px) { button.scan-btn { border-radius: 40px; min-width: 160px; } }
+
+button.scan-btn:hover { background: #0062D1; }
+button.scan-btn:active { transform: scale(0.96); }
+
+#status { 
+    color: rgba(21,125,255,0.45); 
+    margin-top: 25px; 
+    font-size: 12px; 
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+.container { 
+    max-width: 100%; 
+    margin: 0 auto; 
+    padding: 0 0 40px; 
+    width: 100%;
+}
+
+#analysisCard { 
+    display: none; 
+    background: #0A0A0A; 
+    border: 1px solid #222222;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.meta-bar { 
+    background: #111111; 
+    padding: 12px 15px; 
+    display: flex; 
+    flex-wrap: wrap;
+    justify-content: space-between; 
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #222222;
+}
+
+#tokenImage { width: 35px; height: 35px; border-radius: 50%; border: 1px solid #157DFF; }
+.mcap-badge { color: #157DFF; font-weight: 900; margin-left: 8px; font-size: 13px; }
+
+.right-side-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: auto;
+}
+
+#holdContainer, #devWalletContainer {
+    display: flex;
+    align-items: center;
+}
+
+.dev-wallet-container { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    background: #000000; 
+    padding: 6px 10px; 
+    border: 1px solid #333333;
+    border-radius: 6px;
+}
+
+.hold-bar-container {
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    background: #000000; 
+    padding: 6px 10px; 
+    border: 1px solid #333333;
+    border-radius: 6px;
+}
+
+.copy-btn {
+    background: #157DFF;
+    border: none;
+    color: white;
+    font-size: 9px;
+    font-weight: 900;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.desktop-flex {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tabs-container {
+    display: flex;
+    gap: 8px;
+    padding: 12px 15px;
+    border-bottom: 1px solid #222222;
+    background: #111111;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    background: transparent;
+    border: 1px solid #333333;
+    color: #888888;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tab-btn:hover {
+    border-color: #157DFF;
+    color: #FFFFFF;
+}
+
+.tab-btn.active {
+    background: #157DFF;
+    border-color: #157DFF;
+    color: #FFFFFF;
+}
+
+.recursive-wallet-list {
+    padding: 15px;
+}
+
+.recursive-wallet-item {
+    background: #111111;
+    border: 1px solid #222222;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.recursive-wallet-item:hover {
+    border-color: #157DFF;
+    background: #1a1a1a;
+}
+
+.recursive-wallet-address {
+    font-family: 'Courier New', monospace;
+    color: #157DFF;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.recursive-wallet-details {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.recursive-wallet-amount {
+    color: #00FFAD;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.recursive-wallet-percentage {
+    background: rgba(21,125,255,0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #157DFF;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.recursive-wallet-time {
+    color: #888888;
+    font-size: 11px;
+}
+
+.recursive-click-hint {
+    color: #666666;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.recursive-click-hint::before {
+    content: "👆";
+    font-size: 12px;
+}
+
+.holder-stats {
+    display: flex;
+    gap: 30px;
+    padding: 15px 15px;
+    border-bottom: 1px solid #222222;
+    background: #111111;
+}
+
+.holder-stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.holder-stat-label {
+    color: #666;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.holder-stat-value {
+    color: #00FFAD;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.holder-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.holder-table th {
+    color: #666;
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #222222;
+    background: #111111;
+}
+
+.holder-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #151515;
+    font-size: 13px;
+    font-family: 'Courier New', monospace;
+}
+
+.holder-table tr:hover {
+    background: #1a1a1a;
+}
+
+.holder-wallet {
+    color: #157DFF;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+}
+
+.holder-wallet:hover {
+    text-decoration: underline;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.badge-dev {
+    background: rgba(168,85,247,0.2);
+    color: #A855F7;
+}
+
+.badge-selling {
+    background: rgba(255,75,75,0.2);
+    color: #FF4B4B;
+}
+
+.badge-insider {
+    background: rgba(21,125,255,0.2);
+    color: #157DFF;
+}
+
+.badge-supply {
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+    border: 1px solid #444;
+}
+.badge-buy {
+    background: rgba(0, 255, 173, 0.2);
+    color: #00FFAD;
+}
+.badge-recursive {
+    background: rgba(21,125,255,0.2);
+    color: #157DFF;
+    border: 1px solid #157DFF;
+}
+.badge-lock {
+    background: rgba(255, 157, 0, 0.2);
+    color: #FF9D00;
+    border: 1px solid #FF9D00;
+}
+.LOCK { 
+    color: #FF9D00; 
+    font-weight: bold; 
+}
+
+.risk-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 15px;
+}
+
+.risk-card {
+    background: #111111;
+    border: 1px solid #222222;
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.2s ease;
+}
+
+.risk-card:hover {
+    border-color: #157DFF;
+}
+
+.risk-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #222222;
+}
+
+.risk-card-header span {
+    color: #157DFF;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.risk-card-header .risk-icon {
+    font-size: 18px;
+}
+
+.risk-value {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.risk-desc {
+    color: #888888;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.risk-detail {
+    background: #0A0A0A;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 8px;
+    font-size: 12px;
+    border-left: 2px solid #157DFF;
+}
+
+.risk-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-right: 6px;
+    margin-bottom: 4px;
+}
+
+.risk-badge.high {
+    background: rgba(255,75,75,0.2);
+    color: #FF4B4B;
+    border: 1px solid #FF4B4B;
+}
+
+.risk-badge.medium {
+    background: rgba(255,215,0,0.2);
+    color: #FFD700;
+    border: 1px solid #FFD700;
+}
+
+.risk-badge.low {
+    background: rgba(0,255,173,0.2);
+    color: #00FFAD;
+    border: 1px solid #00FFAD;
+}
+
+.risk-warning {
+    color: #FF4B4B;
+    font-size: 11px;
+    margin-top: 6px;
+    padding-left: 12px;
+    list-style-type: disc;
+}
+
+.risk-warning-item {
+    margin-bottom: 4px;
+}
+
+.trust-score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #222222;
+}
+
+.trust-score-item:last-child {
+    border-bottom: none;
+}
+
+.trust-score-wallet {
+    font-family: 'Courier New', monospace;
+    color: #157DFF;
+    font-size: 12px;
+}
+
+.trust-score-value {
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.velocity-stats {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    padding: 8px;
+    background: #0A0A0A;
+    border-radius: 6px;
+}
+
+.velocity-stat {
+    text-align: center;
+}
+
+.velocity-stat-label {
+    color: #666;
+    font-size: 9px;
+    text-transform: uppercase;
+}
+
+.velocity-stat-value {
+    color: #00FFAD;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.empty-state-title {
+    color: #FFFFFF;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.empty-state-desc {
+    color: #888;
+    font-size: 14px;
+    max-width: 400px;
+    margin: 0 auto 25px;
+}
+
+.analyze-btn {
+    background: #157DFF;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.analyze-btn:hover {
+    background: #0062D1;
+}
+
+.analyze-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.loader-small {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #333;
+    border-radius: 50%;
+    border-top-color: #157DFF;
+    animation: spin 1s linear infinite;
+}
+
+.table-wrapper { width: 100%; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 600px; }
+th { color: #666666; padding: 12px 15px; text-align: left; font-size: 10px; text-transform: uppercase; border-bottom: 1px solid #222222; }
+td { padding: 12px 15px; border-bottom: 1px solid #151515; font-size: 13px; font-family: 'Courier New', monospace; }
+
+.CREATE { color: #FFFFFF; font-weight: bold; }
+.BUY { color: #00FFAD; font-weight: bold; }
+.SELL { color: #FF4B4B; font-weight: bold; }
+.TRANSFER { color: #FFD700; font-weight: bold; }
+.BURN { color: #FF9D00; font-weight: bold; }
+.TRANSFER_IN { color: #157DFF; font-weight: bold; }
+.TRANSFER_OUT { color: #BB66FF; font-weight: bold; }
+.LOCK { color: #FF9D00; font-weight: bold; }
+
+.tx-link img { width: 14px; margin-left: 6px; filter: invert(1); opacity: 0.6; }
+
+.dev-tag { 
+    background: rgba(168,85,247,0.2); 
+    color: #A855F7; 
+    padding: 2px 6px; 
+    border-radius: 4px; 
+    font-size: 10px; 
+    margin-left: 5px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.shiny-address {
+    font-family: 'Courier New', monospace;
+    font-weight: 800;
+    color: #157DFF;
+    background: linear-gradient(to right, #157DFF 20%, #fff 50%, #157DFF 80%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 2s linear infinite;
+    display: inline-block;
+}
+
+@keyframes shine {
+    to { background-position: 200% center; }
+}
+
+#loading-row td {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+    font-style: italic;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+.refresh-btn {
+    background: transparent;
+    border: none;
+    color: #157DFF;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 8px;
+    padding: 0 5px;
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.refresh-btn:hover {
+    transform: rotate(180deg);
+}
+
+.refresh-btn.loading {
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.mcap-container {
+    display: inline-flex;
+    align-items: center;
+}
+
+.mobile-header {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #0A0A0A;
+    border-bottom: 1px solid #222;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.mobile-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+}
+
+.explore-dropdown {
+    position: relative;
+}
+
+.explore-btn {
+    background: #111;
+    border: 1px solid #333;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.explore-btn:hover {
+    background: #157DFF;
+    border-color: #157DFF;
+}
+
+.explore-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 12px;
+    min-width: 180px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    z-index: 1001;
+    overflow: hidden;
+}
+
+.explore-menu.show {
+    display: block;
+}
+
+.explore-item {
+    display: block;
+    padding: 12px 16px;
+    color: #ccc;
+    text-decoration: none;
+    font-size: 17px;
+    border-bottom: 1px solid #222;
+    transition: all 0.2s;
+    font-weight: 700;
+}
+
+.explore-item:last-child {
+    border-bottom: none;
+}
+
+.explore-item:hover {
+    background: #157DFF;
+    color: white;
+}
+
+@media (max-width: 768px) {
+html, body{
+overflow:auto;
+height:auto;
+}
+.mobile-header {
+    display: flex;
+}
+.sidebar {
+    display: none;
+}
+    .intro-card {
+        padding: 30px 20px;
+        width: 90%;
+    }
+    
+    .intro-card h1 {
+        font-size: 22px;
+    }
+    
+    .intro-text {
+        font-size: 13px;
+    }
+    
+    .intro-features {
+        font-size: 13px;
+        padding: 12px;
+    }
+.app-wrapper {
+    display: block;
+}
+.desktop-flex {
+    display: block !important;
+}
+#notification-container {
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    width: auto;
+    padding: 0;
+}
+.transfer-notif {
+    padding: 10px 12px;
+    font-size: 11px;
+    border-left-width: 3px;
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+}
+.transfer-notif strong {
+    font-size: 12px;
+}
+.transfer-notif .shiny-address {
+    font-size: 10px;
+}
+.meta-bar{
+position:sticky;
+top:0;
+z-index:50;
+background:#0A0A0A;
+border-bottom:1px solid #222;
+flex-direction:column;
+align-items:flex-start;
+gap:8px;
+padding:8px 10px;
+}
+.token-info {
+    display: flex !important;
+    align-items: center !important;
+    width: 100%;
+    flex-wrap: nowrap !important;
+}
+
+.token-info > img {
+    flex-shrink: 0;
+    margin-right: 6px;
+}
+
+.token-info > span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.mcap-container {
+    margin-left: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+#tokenMCap {
+    white-space: nowrap;
+}
+.mcap-badge {
+    font-size: 11px;
+    color: #157DFF;
+    font-weight: 600;
+    margin-left: 0 !important;
+    white-space: nowrap;
+}
+.mcap-badge::before {
+    content: "" !important;
+    display: none !important;
+}
+#refreshMcapBtn {
+    font-size: 11px;
+    padding: 2px 3px;
+    margin: 0;
+    flex-shrink: 0;
+}
+.right-side-container{
+width:100%;
+flex-wrap:wrap;
+gap:6px;
+}
+#holdContainer,
+#devWalletContainer{
+width:100%;
+}
+.dev-wallet-container,
+.hold-bar-container{
+width:100%;
+justify-content:space-between;
+padding:4px 8px;
+}
+.dev-wallet-container span {
+    font-size: 10px !important;
+}
+.hold-bar-container {
+    font-size: 11px;
+}
+.hold-bar-container span {
+    font-size: 8px !important;
+}
+.copy-btn {
+    font-size: 8px;
+    padding: 3px 6px;
+}
+.tabs-container{
+display:flex;
+overflow-x:auto;
+flex-wrap:nowrap;
+gap:8px;
+padding:12px 0;
+scroll-snap-type:x mandatory;
+position: relative;
+}
+.tabs-container::-webkit-scrollbar{
+display:none;
+}
+.tabs-container::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 50px;
+    background: linear-gradient(to right, rgba(10,10,10,0), #0A0A0A);
+    pointer-events: none;
+    z-index: 5;
+}
+.tabs-container::before {
+    content: '›';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #157DFF;
+    font-size: 18px;
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 6;
+    animation: scrollHint 1.5s infinite;
+}
+@keyframes scrollHint {
+    0% { transform: translateY(-50%) translateX(0); }
+    50% { transform: translateY(-50%) translateX(5px); }
+    100% { transform: translateY(-50%) translateX(0); }
+}
+.tabs-container.scrolled-end::after,
+.tabs-container.scrolled-end::before {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.tab-btn{
+flex-shrink:0;
+scroll-snap-align:start;
+}
+#transactionsTable table,
+#recursiveWalletTransactions table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 0;
+}
+#transactionsTable thead,
+#recursiveWalletTransactions thead {
+    display: none;
+}
+#transactionsTable tbody,
+#recursiveWalletTransactions tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+}
+#transactionsTable tr,
+#recursiveWalletTransactions tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    align-items: center;
+    background: #0F0F0F;
+    border: 1px solid #1E1E1E;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    animation: txFade 0.25s ease;
+}
+#transactionsTable tr:hover,
+#recursiveWalletTransactions tr:hover {
+    border-color: #157DFF;
+    background: #151515;
+}
+#transactionsTable td,
+#recursiveWalletTransactions td {
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Courier New', monospace;
+}
+#transactionsTable td:nth-child(1),
+#recursiveWalletTransactions td:nth-child(1) {
+    font-weight: 700;
+}
+#transactionsTable td:nth-child(2),
+#recursiveWalletTransactions td:nth-child(2) {
+    justify-content: flex-start;
+    color: #00FFAD;
+}
+#transactionsTable td:nth-child(3),
+#recursiveWalletTransactions td:nth-child(3) {
+    justify-content: flex-start;
+    color: #157DFF;
+}
+#transactionsTable td:nth-child(4),
+#recursiveWalletTransactions td:nth-child(4) {
+    justify-content: flex-end;
+    color: #888;
+    font-size: 11px;
+}
+@keyframes txFade{
+from{
+opacity:0;
+transform:translateY(-6px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+.holder-table{
+display:table;
+width:100%;
+}
+.holder-table thead{
+display:table-header-group;
+}
+.holder-table tbody{
+display:table-row-group;
+}
+.holder-table tr{
+display:table-row;
+}
+.holder-table td,
+.holder-table th{
+display:table-cell;
+font-size:12px;
+padding:10px;
+}
+.holder-stats{
+flex-wrap:wrap;
+gap:12px;
+}
+.holder-stat-item{
+width:48%;
+}
+.recursive-wallet-item{
+flex-direction:column;
+align-items:flex-start;
+gap:8px;
+}
+.recursive-wallet-details{
+width:100%;
+justify-content:space-between;
+}
+.risk-grid{
+grid-template-columns:1fr;
+gap:12px;
+}
+.risk-card{
+padding:12px;
+}
+.floating-analyze{
+position:fixed;
+bottom:18px;
+right:16px;
+z-index:200;
+background:#157DFF;
+color:#fff;
+border:none;
+padding:14px 18px;
+border-radius:40px;
+font-weight:800;
+font-size:12px;
+box-shadow:0 8px 20px rgba(0,0,0,0.6);
+cursor:pointer;
+}
+
+.velocity-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+.velocity-label {
+    color: #888;
+    font-size: 13px;
+}
+
+.velocity-value {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.velocity-reason {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.4;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #222;
+}
+
+/* Reuse existing badge styles */
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-buy {
+    background: rgba(0, 255, 173, 0.2);
+    color: #00FFAD;
+    border: 1px solid #00FFAD;
+}
+
+.badge-selling {
+    background: rgba(255, 75, 75, 0.2);
+    color: #FF4B4B;
+    border: 1px solid #FF4B4B;
+}
+}
+
+.sidebar {
+    position: relative;
+}
+.sidebar-item {
+    width: 100%;
+    padding: 15px 0;
+    text-align: center;
+    color: #888;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 700;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+.sidebar-toggle {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #111;
+    border: 1px solid #333;
+    color: #888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.3s;
+    z-index: 100;
+}
+.sidebar-toggle:hover {
+    background: #157DFF;
+    color: white;
+    border-color: #157DFF;
+}
+.sidebar.collapsed {
+    width: 60px;
+}
+.sidebar.collapsed .sidebar-item {
+    padding: 15px 0;
+    justify-content: center;
+}
+.sidebar.collapsed .sidebar-item span {
+    display: none;
+}
+.sidebar.collapsed .sidebar-item img {
+    margin-right: 0 !important;}
+.sidebar.collapsed .sidebar-toggle {
+    left: 50%;
+    transform: translateX(-50%);
+}
+.sidebar, .sidebar-item, .sidebar-logo {
+    transition: all 0.3s ease;
+}
+</style>
+</head>
+<body>
+<!-- INTRO MODAL - WELCOME TO PUMPSKOPE -->
+<div id="pumpscopeIntro" class="intro-overlay">
+  <div class="intro-card">
+    <div class="intro-logo">
+        <img src="png.logo.png" alt="PumpSkope" style="width: 60px; height: 60px;">
+    </div>
+    <h1>Welcome to PumpSkope</h1>
+    <p class="intro-text">
+      Behavioral intelligence for degen <b>pump.fun</b> coins.
+      PumpSkope analyzes developer wallets, recursive networks,
+      and holder activity to turn raw blockchain data into
+      <b>actionable signals</b> before they hit the chart.
+    </p>
+    <div class="intro-features">
+      <div>🔎 Dev wallet tracking</div>
+      <div>🕸️ Recursive wallet intelligence</div>
+      <div>⚡ Top holder velocity signals</div>
+      <div>🧠 Honeypot & behavioral risk detection</div>
+    </div>
+    <div class="powered-by">
+        <span>Powered by</span>
+        <div class="logo-row">
+            <img src="helius-logo.svg" alt="Helius" class="partner-logo">
+            <img src="bitquery1.png" alt="Bitquery" class="partner-logo">
+            <img src="solana-logo.png" alt="Solana" class="partner-logo">
+        </div>
+    </div>
+    <button id="enterPumpScope" class="enter-btn">
+      Enter Terminal
+    </button>
+  </div>
+</div>
+<div class="mobile-header">
+    <div class="mobile-logo"></div>
+    <div class="explore-dropdown">
+        <button class="explore-btn" onclick="toggleExploreMenu()">
+            Explore ▼
+        </button>
+        <div id="exploreMenu" class="explore-menu">
+            <a href="DOCS.html" class="explore-item">📄 Docs</a>
+            <a href="https://x.com/pumpskope" class="explore-item">
+            <img src="logo-white.png" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">   
+            </a>
+            <a href="#" class="explore-item">
+            <img src="Discord-Symbol-White.png" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">
+            </a>
+            <a href="#" class="explore-item">
+             <img src="telegram-logo.png" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">   
+            </a>
+        </div>
+    </div>
+</div>
+<div class="app-wrapper">
+    <div class="sidebar">
+      <a href="/" style="text-decoration: none;">
+    <div class="sidebar-logo">
+        <img src="png.logo.png" style="cursor: pointer;" alt="PumpScope">
+    </div>
+    </a>
+        <a href="DOCS.html" class="sidebar-item" >📄 Docs</a>
+       <a href="https://x.com/pumpskope" class="sidebar-item">
+    <img src="logo-white.png" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">
+    </a>
+       <a href="#" class="sidebar-item">
+    <img src="Discord-Symbol-White.png" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">
+    </a>
+      <a href="#" class="sidebar-item">
+    <img src="telegram-logo.png" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">
+    </a>
+    </div>
+    <div class="main-content">
+        <div class="main-wrapper" id="pageWrapper">
+            <div id="notification-container"></div>
+            <div id="copy-alert">ADDRESS COPIED TO CLIPBOARD</div>
+            <div class="header" id="mainHeader">
+                <div class="logo-container">
+                    <img src="logo.png" alt="PumpScope" class="logo-img">
+                </div>
+                <div class="tagline-container">
+                    <h1 class="tagline">On-Chain Intelligence</h1>
+                    <span class="sub-tagline">Exposing dev behavior with zero latency</span>
+                </div>
+                <div class="search-area">
+                    <input type="text" id="tokenCA" placeholder="Enter Contract Address..." spellcheck="false">
+                    <button class="scan-btn" onclick="fetchData()">Analyze</button>
+                </div>
+                <div id="status">INITIATING TERMINAL...</div>
+            </div>
+            <div class="container">
+                <div id="analysisCard">
+                    <div class="meta-bar">
+                        <div class="token-info desktop-flex">
+                            <img id="tokenImage" style="display:none;">
+                            <span>
+                                <strong style="font-size: 10px; color: #666; text-transform: uppercase;">Live:</strong> 
+                                <span id="tokenName" style="font-weight: 800; font-size: 16px;"></span>
+                                <span class="mcap-container">
+                                    <span id="tokenMCap" class="mcap-badge"></span>
+                                    <button id="refreshMcapBtn" class="refresh-btn" onclick="refreshMarketCap()" title="Refresh market cap">🔄</button>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="right-side-container">
+                            <div id="holdContainer"></div>
+                            <div id="devWalletContainer"></div>
+                        </div>
+                    </div>
+                    <div class="tabs-container">
+                        <button class="tab-btn active" onclick="switchTab('transactions')">Dev Transactions</button>
+                        <button class="tab-btn" onclick="switchTab('holders')">Holder Analysis</button>
+                        <button class="tab-btn" onclick="switchTab('recursive')">Recursive Analysis</button>
+                        <button class="tab-btn" onclick="switchTab('risk')">Risk Signals</button>
+                    </div>
+                    <div id="transactionsTable">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr><th>Action</th><th>Amount</th><th>Mcap</th><th>Time</th></tr>
+                                </thead>
+                                <tbody id="txBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="holderContent" style="display: none;">
+                        <div id="holderEmptyState" class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <div class="empty-state-title">Holder Analysis</div>
+                            <div class="empty-state-desc">
+                                Analyze top 10 holders, detect selling activity, and uncover insider networks.
+                            </div>
+                            <button id="analyzeHoldersBtn" class="analyze-btn" onclick="runHolderAnalysis()">
+                                <span id="analyzeBtnText">🔍 ANALYZE HOLDERS</span>
+                                <span id="analyzeBtnLoader" class="loader-small" style="display: none;"></span>
+                            </button>
+                            <div style="color: #666; font-size: 12px; margin-top: 20px;">
+                                This may take 30-60 seconds
+                            </div>
+                        </div>
+                        <div id="holderResults" style="display: none;">
+                            <div class="holder-stats">
+                                <div class="holder-stat-item">
+                                    <span class="holder-stat-label">Total Supply</span>
+                                    <span class="holder-stat-value" id="holderTotalSupply">-</span>
+                                </div>
+                                <div class="holder-stat-item">
+                                    <span class="holder-stat-label">Holders</span>
+                                    <span class="holder-stat-value" id="holderTotalHolders">-</span>
+                                </div>
+                                <div class="holder-stat-item">
+                                    <span class="holder-stat-label">Top 10%</span>
+                                    <span class="holder-stat-value" id="holderTop10">-</span>
+                                </div>
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="holder-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Rank</th>
+                                            <th>Wallet</th>
+                                            <th>Balance</th>
+                                            <th>%</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="holderTableBody">
+                                        <tr><td colspan="5" style="text-align: center; padding: 30px; color: #888;">Click analyze to load data</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="recursiveContent" style="display: none;">
+                        <div class="empty-state" id="recursiveEmptyState">
+                            <div class="empty-state-icon">🔄</div>
+                            <div class="empty-state-title">Recursive Analysis</div>
+                            <div class="empty-state-desc">
+                                Wallets that received transfers >0.9% from the dev will appear here.
+                                Click any wallet to view their transaction history.
+                            </div>
+                            <button id="loadRecursiveBtn" class="analyze-btn" onclick="loadRecursiveWallets()" style="margin-bottom: 15px;">
+                                <span id="loadRecursiveBtnText">🔍 LOAD RECURSIVE WALLETS</span>
+                                <span id="loadRecursiveBtnLoader" class="loader-small" style="display: none;"></span>
+                            </button>
+                            <div style="color: #666; font-size: 12px; margin-top: 20px;">
+                                No recursive wallets detected yet
+                            </div>
+                        </div>
+                        <div id="recursiveWalletList" class="recursive-wallet-list" style="display: none;">
+                        </div>
+                        <div id="recursiveWalletTransactions" style="display: none;">
+                            <div style="padding: 10px 15px; background: #111111; border-bottom: 1px solid #222222;">
+                                <span style="color: #157DFF; font-weight: 600;">Transactions for: </span>
+                                <span id="selectedRecursiveWallet" style="font-family: 'Courier New'; color: #00FFAD;"></span>
+                                <button onclick="backToRecursiveWallets()" style="float: right; background: transparent; border: 1px solid #333; color: #888; padding: 4px 12px; border-radius: 4px; cursor: pointer;">← Back</button>
+                            </div>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr><th>Action</th><th>Amount</th><th>Mcap</th><th>Time</th></tr>
+                                    </thead>
+                                    <tbody id="recursiveTxBody">
+                                        <tr><td colspan="4" style="text-align: center; padding: 30px; color: #888;">Select a wallet to view transactions</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="riskContent" style="display: none;">
+                        <div class="empty-state" id="riskEmptyState">
+                            <div class="empty-state-icon">⚠️</div>
+                            <div class="empty-state-title">Risk Signals</div>
+                            <div class="empty-state-desc">
+                                Analyze top 10 selling velocity, dev history, honeypot detection, and recursive trust scores.
+                            </div>
+                            <button id="analyzeRiskBtn" class="analyze-btn" onclick="runRiskAnalysis()">
+                                <span id="analyzeRiskBtnText">🔍 ANALYZE RISK SIGNALS</span>
+                                <span id="analyzeRiskBtnLoader" class="loader-small" style="display: none;"></span>
+                            </button>
+                            <div style="color: #666; font-size: 12px; margin-top: 20px;">
+                                This may take 20-30 seconds
+                            </div>
+                        </div>
+                        <div id="riskResults" style="display: none; padding: 15px;">
+                            <div class="risk-grid">
+                                <div class="risk-card" id="velocityCard">
+                                    <div class="risk-card-header">
+                                        <span class="risk-icon">📊</span>
+                                        <span>Top 10 Selling Velocity</span>
+                                    </div>
+                                    <div id="velocityContent">
+                                        <div class="risk-value" id="velocityTrend">-</div>
+                                        <div class="risk-desc" id="velocityDesc">Analyzing top holder activity...</div>
+                                    </div>
+                                </div>
+                                <div class="risk-card" id="devHistoryCard">
+                                    <div class="risk-card-header">
+                                        <span class="risk-icon">📜</span>
+                                        <span>Dev History Index</span>
+                                    </div>
+                                    <div id="devHistoryContent">
+                                        <div class="risk-value" id="devHistoryRisk">-</div>
+                                        <div class="risk-desc" id="devHistoryDesc">Checking dev's previous tokens...</div>
+                                        <div class="risk-detail" id="devHistoryDetail">
+                                            <span id="devHistoryTokens">0</span> total tokens · 
+                                            <span style="color: #00FFAD;" id="devHistoryActive">0</span> active · 
+                                            <span style="color: #FF4B4B;" id="devHistoryRugged">0</span> rugged
+                                        </div>
+                                        <div id="devHistoryWarnings" style="margin-top: 8px;"></div>
+                                    </div>
+                                </div>
+                                <div class="risk-card" id="honeypotCard">
+                                    <div class="risk-card-header">
+                                        <span class="risk-icon">🍯</span>
+                                        <span>Honeypot Detector</span>
+                                    </div>
+                                    <div id="honeypotContent">
+                                        <div class="risk-value" id="honeypotRisk">-</div>
+                                        <div class="risk-desc" id="honeypotDesc">Checking if you can sell...</div>
+                                        <div class="risk-detail" id="honeypotDetail">
+                                            <span id="honeypotCanBuy">✓</span> Can Buy · 
+                                            <span id="honeypotCanSell">✓</span> Can Sell
+                                        </div>
+                                        <div id="honeypotWarnings" style="margin-top: 8px;"></div>
+                                    </div>
+                                </div>
+                                <div class="risk-card" id="trustScoreCard">
+                                    <div class="risk-card-header">
+                                        <span class="risk-icon">🕸️</span>
+                                        <span>Recursive Trust Scores</span>
+                                    </div>
+                                    <div id="trustScoreContent">
+                                        <div class="risk-value" id="trustScoreSummary">-</div>
+                                        <div class="risk-desc" id="trustScoreDesc">Analyzing connected wallets...</div>
+                                        <div id="trustScoreList" style="margin-top: 10px; max-height: 150px; overflow-y: auto;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+let currentCA = "";
+let currentDevWallet = "";
+let socket;
+let reconnectInterval;
+let displayedTrades = [];
+let currentPage = 0;
+let totalTradeCount = 0;
+const TRADES_PER_PAGE = 40;
+let isLoadingMore = false;
+let hasMoreTrades = true;
+let currentCreator = '';
+let recursiveWallets = [];
+let currentRecursiveWallet = '';
+let topHoldersData = [];
+let totalSupplyData = 0;
+
+const alertSound = new Audio('https://notificationsounds.com/storage/sounds/file-sounds-1150-pristine.mp3');
+alertSound.volume = 0.5;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const intro = document.getElementById("pumpscopeIntro");
+    const enterBtn = document.getElementById("enterPumpScope");
+    
+    // Check if user has seen intro before
+    if(!localStorage.getItem("pumpscope_intro_seen")){
+        intro.style.display = "flex";
+    } else {
+        intro.style.display = "none";
+    }
+    
+   
+    enterBtn.onclick = function() {
+        intro.style.opacity = "0";
+        setTimeout(() => {
+            intro.style.display = "none";
+        }, 400);
+        localStorage.setItem("pumpscope_intro_seen", "true");
+    };
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'sidebar-toggle';
+    toggleBtn.innerHTML = '❮❮';
+    toggleBtn.setAttribute('data-label', 'Collapse menu');
+    sidebar.appendChild(toggleBtn);
+    const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+    if (isCollapsed) {
+        sidebar.classList.add('collapsed');
+        toggleBtn.innerHTML = '❯❯';
+        toggleBtn.setAttribute('data-label', 'Expand menu');
+    }
+    toggleBtn.addEventListener('click', function () {
+        sidebar.classList.toggle('collapsed');
+        if (sidebar.classList.contains('collapsed')) {
+            toggleBtn.innerHTML = '❯❯';
+            toggleBtn.setAttribute('data-label', 'Expand menu');
+            localStorage.setItem('sidebarCollapsed', 'true');
+        } else {
+            toggleBtn.innerHTML = '❮❮';
+            toggleBtn.setAttribute('data-label', 'Collapse menu');
+            localStorage.setItem('sidebarCollapsed', 'false');
+        }
+    });
+    
+    // Initialize scroll hint for mobile
+    const tabsContainer = document.querySelector('.tabs-container');
+    if (tabsContainer) {
+        tabsContainer.addEventListener('scroll', function() {
+            if (this.scrollLeft + this.clientWidth >= this.scrollWidth - 20) {
+                this.classList.add('scrolled-end');
+            } else {
+                this.classList.remove('scrolled-end');
+            }
+        });
+    }
+});
+
+function toggleExploreMenu() {
+    const menu = document.getElementById('exploreMenu');
+    menu.classList.toggle('show');
+}
+
+document.addEventListener('click', function(event) {
+    const exploreBtn = document.querySelector('.explore-btn');
+    const exploreMenu = document.getElementById('exploreMenu');
+    if (exploreBtn && !exploreBtn.contains(event.target) && 
+        exploreMenu && !exploreMenu.contains(event.target)) {
+        exploreMenu.classList.remove('show');
+    }
+});
+
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    if (tab === 'transactions') document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    if (tab === 'holders') document.querySelectorAll('.tab-btn')[1].classList.add('active');
+    if (tab === 'recursive') document.querySelectorAll('.tab-btn')[2].classList.add('active');
+    if (tab === 'risk') document.querySelectorAll('.tab-btn')[3].classList.add('active');
+    document.getElementById('transactionsTable').style.display = tab === 'transactions' ? 'block' : 'none';
+    document.getElementById('holderContent').style.display = tab === 'holders' ? 'block' : 'none';
+    document.getElementById('recursiveContent').style.display = tab === 'recursive' ? 'block' : 'none';
+    document.getElementById('riskContent').style.display = tab === 'risk' ? 'block' : 'none';
+    if (tab === 'holders') {
+        document.getElementById('holderEmptyState').style.display = 'block';
+        document.getElementById('holderResults').style.display = 'none';
+    }
+    if (tab === 'recursive') {
+        document.getElementById('recursiveEmptyState').style.display = recursiveWallets.length === 0 ? 'block' : 'none';
+        document.getElementById('recursiveWalletList').style.display = recursiveWallets.length > 0 ? 'block' : 'none';
+        document.getElementById('recursiveWalletTransactions').style.display = 'none';
+    }
+    if (tab === 'risk') {
+        document.getElementById('riskEmptyState').style.display = 'block';
+        document.getElementById('riskResults').style.display = 'none';
+    }
+}
+
+function backToRecursiveWallets() {
+    document.getElementById('recursiveWalletTransactions').style.display = 'none';
+    document.getElementById('recursiveEmptyState').style.display = recursiveWallets.length === 0 ? 'block' : 'none';
+    document.getElementById('recursiveWalletList').style.display = recursiveWallets.length > 0 ? 'block' : 'none';
+}
+
+async function loadRecursiveWallets() {
+    if (!currentCA) {
+        alert('Please load a token first');
+        return;
+    }
+    document.getElementById('loadRecursiveBtnText').style.display = 'none';
+    document.getElementById('loadRecursiveBtnLoader').style.display = 'inline-block';
+    document.getElementById('loadRecursiveBtn').disabled = true;
+    try {
+        const response = await fetch(`/api/recursive-wallets/${currentCA}`);
+        const data = await response.json();
+        if (data.success && data.wallets && data.wallets.length > 0) {
+            recursiveWallets = [];
+            data.wallets.forEach(w => {
+                addRecursiveWallet(w.wallet, w.amount, w.percentage, w.timestamp);
+            });
+        } else {
+            document.getElementById('recursiveEmptyState').style.display = 'block';
+            document.getElementById('recursiveWalletList').style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error loading recursive wallets:', error);
+        alert('Error loading recursive wallets');
+    } finally {
+        document.getElementById('loadRecursiveBtnText').style.display = 'inline';
+        document.getElementById('loadRecursiveBtnLoader').style.display = 'none';
+        document.getElementById('loadRecursiveBtn').disabled = false;
+    }
+}
+
+async function loadRecursiveWalletTransactions(wallet) {
+    if (!currentCA || !wallet) return;
+    currentRecursiveWallet = wallet;
+    document.getElementById('recursiveTxBody').innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 30px; color: #888;">Loading transactions...</td></tr>';
+    document.getElementById('recursiveEmptyState').style.display = 'none';
+    document.getElementById('recursiveWalletList').style.display = 'none';
+    document.getElementById('recursiveWalletTransactions').style.display = 'block';
+    document.getElementById('selectedRecursiveWallet').textContent = wallet.slice(0,8) + '...' + wallet.slice(-8);
+    try {
+        const response = await fetch(`/api/wallet-transactions/${currentCA}/${wallet}`);
+        const data = await response.json();
+        if (data.success && data.trades && data.trades.length > 0) {
+            const html = data.trades.map(t => {
+                let displayAction = t.action;
+                let actionClass = t.action;
+                if (t.action === "TRANSFER_IN") displayAction = "RECEIVED 📥";
+                if (t.action === "TRANSFER_OUT") displayAction = "SENT 📤";
+                if (t.action === "BURN 🔥") displayAction = "BURN 🔥";
+                if (t.action === "LOCK 🔒") displayAction = "LOCK 🔒";
+                return `<tr>
+                    <td class="${actionClass}" data-label="Action">${displayAction}
+                        <a href="https://solscan.io/tx/${t.signature}" target="_blank" class="tx-link">
+                            <img src="https://solscan.io/favicon.ico">
+                        </a>
+                    </td>
+                    <td data-label="Amount" style="color:#00FFAD; font-weight:600;">${t.amount}</td>
+                    <td data-label="Mcap" style="color:#157DFF; font-weight:600;">$${formatNumber(t.mcap)}</td>
+                    <td data-label="Time" style="color:#888;">${formatTime(t.time)}</td>
+                </tr>`;
+            }).join('');
+            document.getElementById('recursiveTxBody').innerHTML = html;
+        } else {
+            document.getElementById('recursiveTxBody').innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 30px; color: #888;">No transactions found for this wallet</td></tr>';
+        }
+    } catch (error) {
+        console.error('Error loading recursive wallet transactions:', error);
+        document.getElementById('recursiveTxBody').innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 30px; color: #888;">Error loading transactions</td></tr>';
+    }
+}
+
+function addRecursiveWallet(wallet, amount, percentage, timestamp) {
+    if (recursiveWallets.some(w => w.address === wallet)) return;
+    recursiveWallets.push({
+        address: wallet,
+        amount: amount,
+        percentage: percentage,
+        timestamp: timestamp,
+        timeAgo: formatTime(timestamp)
+    });
+    if (document.getElementById('recursiveContent').style.display === 'block') {
+        renderRecursiveWallets();
+    }
+}
+
+function renderRecursiveWallets() {
+    const container = document.getElementById('recursiveWalletList');
+    if (recursiveWallets.length === 0) {
+        document.getElementById('recursiveEmptyState').style.display = 'block';
+        container.style.display = 'none';
+        return;
+    }
+    document.getElementById('recursiveEmptyState').style.display = 'none';
+    container.style.display = 'block';
+    let html = '';
+    recursiveWallets.forEach(w => {
+        html += `
+            <div class="recursive-wallet-item" onclick="loadRecursiveWalletTransactions('${w.address}')">
+                <div>
+                    <div class="recursive-wallet-address">${w.address.slice(0,8)}...${w.address.slice(-8)}</div>
+                    <div class="recursive-click-hint">Click to view transactions</div>
+                </div>
+                <div class="recursive-wallet-details">
+                    <span class="recursive-wallet-amount">${w.amount}</span>
+                    <span class="recursive-wallet-percentage">${w.percentage}%</span>
+                    <span class="recursive-wallet-time">${w.timeAgo}</span>
+                </div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+async function runHolderAnalysis() {
+    if (!currentCA) {
+        alert('Please load a token first');
+        return;
+    }
+    document.getElementById('analyzeBtnText').style.display = 'none';
+    document.getElementById('analyzeBtnLoader').style.display = 'inline-block';
+    document.getElementById('analyzeHoldersBtn').disabled = true;
+    try {
+        const response = await fetch('/api/analyze-holders', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                token_address: currentCA,
+                dev_wallet: currentDevWallet
+            })
+        });
+        const data = await response.json();
+        if (data.success) {
+            topHoldersData = data.top_holders || [];
+            totalSupplyData = parseFloat(data.total_supply?.replace(/,/g, '')) || 0;
+            document.getElementById('holderEmptyState').style.display = 'none';
+            document.getElementById('holderResults').style.display = 'block';
+            document.getElementById('holderTotalSupply').textContent = data.total_supply || '-';
+            document.getElementById('holderTotalHolders').textContent = data.total_holders || '-';
+            document.getElementById('holderTop10').textContent = data.top_10_concentration || '-';
+            let html = '';
+            if (data.top_holders && data.top_holders.length > 0) {
+                data.top_holders.forEach(h => {
+                    const badges = [];
+                    if (h.is_supply) badges.push('<span class="status-badge badge-supply">SUPPLY</span>');
+                    if (h.is_dev) badges.push('<span class="status-badge badge-dev">DEV</span>');
+                    const barWidth = Math.min(h.percentage, 100);
+                    html += `<tr>
+                        <td><strong>#${h.rank}</strong></td>
+                        <td>
+                            <span class="holder-wallet" onclick="copyToClipboard('${h.full_address || h.address}')">${h.address}</span>
+                            <a href="https://solscan.io/account/${h.full_address || h.address}" target="_blank" style="margin-left: 6px;">
+                                <img src="https://solscan.io/favicon.ico" style="width: 14px; height: 14px; filter: invert(1); opacity: 0.6; vertical-align: middle;">
+                            </a>
+                        </td>
+                        <td>${h.balance}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 60px; height: 3px; background: #222; border-radius: 2px; overflow: hidden;">
+                                    <div style="width: ${barWidth}%; height: 100%; background: #157DFF; border-radius: 2px;"></div>
+                                </div>
+                                <span style="color: #00FFAD; font-size: 12px;">${h.percentage}%</span>
+                            </div>
+                        </td>
+                        <td>${h.status_text ? h.status_text : badges.join(' ')}</td>
+                    </tr>`;
+                });
+            } else {
+                html = '<tr><td colspan="5" style="text-align: center; padding: 30px; color: #888;">No holder data available</td></tr>';
+            }
+            document.getElementById('holderTableBody').innerHTML = html;
+        } else {
+            alert('Failed to load holder data: ' + (data.error || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Holder analysis error:', error);
+        alert('Error loading holder data');
+    } finally {
+        document.getElementById('analyzeBtnText').style.display = 'inline';
+        document.getElementById('analyzeBtnLoader').style.display = 'none';
+        document.getElementById('analyzeHoldersBtn').disabled = false;
+    }
+}
+
+async function runRiskAnalysis() {
+    if (!currentCA) {
+        alert('Please load a token first');
+        return;
+    }
+    if (topHoldersData.length === 0) {
+        alert('⚠️ Please run Holder Analysis first to load top holder data');
+        switchTab('holders');
+        return;
+    }
+    const descElement = document.querySelector('#riskEmptyState .empty-state-desc');
+    const originalDesc = descElement ? descElement.innerHTML : 'Analyze top 10 selling velocity, honeypot detection, and recursive trust scores.';
+    document.getElementById('analyzeRiskBtnText').style.display = 'none';
+    document.getElementById('analyzeRiskBtnLoader').style.display = 'inline-block';
+    document.getElementById('analyzeRiskBtn').disabled = true;
+    if (descElement) {
+        descElement.innerHTML = '⏳ Analyzing on-chain data... This may take 20-30 seconds';
+    }
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 35000);
+    try {
+        const response = await fetch('/api/analyze-risks', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                token_address: currentCA,
+                dev_wallet: currentDevWallet,
+                top_holders: topHoldersData,
+                total_supply: totalSupplyData,
+                recursive_wallets: recursiveWallets
+            }),
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (!response.ok) {
+            throw new Error(`Server responded with status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.success) {
+            document.getElementById('riskEmptyState').style.display = 'none';
+            document.getElementById('riskResults').style.display = 'block';
+            if (data.velocity) updateVelocityCard(data.velocity);
+            if (data.honeypot) updateHoneypotCard(data.honeypot);
+            if (data.trustScores) updateTrustScoreCard(data.trustScores);
+            if (data.devHistory) updateDevHistoryCard(data.devHistory);
+        } else {
+            throw new Error(data.error || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Risk analysis error:', error);
+        if (descElement) {
+            descElement.innerHTML = originalDesc;
+        }
+        if (error.name === 'AbortError') {
+            alert('⏱️ Risk analysis is taking too long. The server might be busy. Please try again.');
+        } else if (error.message.includes('Failed to fetch')) {
+            alert('🌐 Network error. Please check your connection and try again.');
+        } else {
+            alert('Error loading risk data: ' + error.message);
+        }
+    } finally {
+        document.getElementById('analyzeRiskBtnText').style.display = 'inline';
+        document.getElementById('analyzeRiskBtnLoader').style.display = 'none';
+        document.getElementById('analyzeRiskBtn').disabled = false;
+    }
+}
+
+function updateVelocityCard(velocity) {
+    if (!velocity || !velocity.success) {
+        document.getElementById('velocityTrend').innerHTML = '⚪ NO DATA';
+        document.getElementById('velocityDesc').textContent = 'Run Holder Analysis first';
+        return;
+    }
+    
+    document.getElementById('velocityTrend').innerHTML = velocity.verdict;
+    document.getElementById('velocityDesc').textContent = velocity.reason || '';
+    
+    // NEW CLEAN VERSION - No brackets, just counts
+    const statsHtml = `
+        <div style="margin-top: 15px;">
+            <div style="margin-bottom: 12px;">
+                <div style="color: #888; font-size: 12px; margin-bottom: 4px;">Last 1 Hour</div>
+                <div style="display: flex; gap: 10px;">
+                    <span class="status-badge badge-buy">BUY ${velocity.last1h.buyers}</span>
+                    <span class="status-badge badge-selling">SELL ${velocity.last1h.sellers}</span>
+                </div>
+            </div>
+            <div>
+                <div style="color: #888; font-size: 12px; margin-bottom: 4px;">Last 30 Minutes</div>
+                <div style="display: flex; gap: 10px;">
+                    <span class="status-badge badge-buy">BUY ${velocity.last30m.buyers}</span>
+                    <span class="status-badge badge-selling">SELL ${velocity.last30m.sellers}</span>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    const descElement = document.getElementById('velocityDesc');
+    const existingStats = document.getElementById('velocityStats');
+    if (existingStats) {
+        existingStats.innerHTML = statsHtml;
+    } else {
+        const statsDiv = document.createElement('div');
+        statsDiv.id = 'velocityStats';
+        statsDiv.innerHTML = statsHtml;
+        descElement.parentNode.insertBefore(statsDiv, descElement.nextSibling);
+    }
+}
+
+function updateHoneypotCard(honeypot) {
+    if (!honeypot) {
+        document.getElementById('honeypotRisk').innerHTML = '⚪ UNKNOWN';
+        document.getElementById('honeypotDesc').textContent = 'No data';
+        document.getElementById('honeypotCanBuy').innerHTML = '❌';
+        document.getElementById('honeypotCanSell').innerHTML = '❌';
+        return;
+    }
+    if (honeypot.canBuy && honeypot.canSell) {
+        document.getElementById('honeypotRisk').innerHTML = '🟢 SAFE';
+        document.getElementById('honeypotDesc').textContent = honeypot.summary || 'Users Can Sell';
+        document.getElementById('honeypotCanBuy').innerHTML = '✅';
+        document.getElementById('honeypotCanSell').innerHTML = '✅';
+    } else if (honeypot.canBuy && !honeypot.canSell) {
+        document.getElementById('honeypotRisk').innerHTML = '🔴 HONEYPOT';
+        document.getElementById('honeypotDesc').textContent = honeypot.summary || 'Cannot Sell';
+        document.getElementById('honeypotCanBuy').innerHTML = '✅';
+        document.getElementById('honeypotCanSell').innerHTML = '❌';
+    } else {
+        document.getElementById('honeypotRisk').innerHTML = honeypot.riskLevel || '⚪ UNKNOWN';
+        document.getElementById('honeypotDesc').textContent = honeypot.summary || 'Could not verify';
+        document.getElementById('honeypotCanBuy').innerHTML = honeypot.canBuy ? '✅' : '❌';
+        document.getElementById('honeypotCanSell').innerHTML = honeypot.canSell ? '✅' : '❌';
+    }
+    const detailsEl = document.getElementById('honeypotDetails');
+    if (detailsEl) {
+        detailsEl.innerHTML = honeypot.details || '';
+    }
+}
+
+function updateTrustScoreCard(trustScores) {
+    document.getElementById('trustScoreSummary').innerHTML = trustScores.summary || 'No wallets detected';
+    document.getElementById('trustScoreDesc').textContent = `${trustScores.totalWallets || 0} wallets analyzed`;
+    let listHtml = '';
+    if (trustScores.wallets && trustScores.wallets.length > 0) {
+        trustScores.wallets.slice(0, 5).forEach(w => {
+            const displayText = w.summary || `${w.riskColor} ${w.riskLevel}: ${w.trustScore}`;
+            listHtml += `
+                <div class="trust-score-item">
+                    <span class="trust-score-wallet">${w.address}</span>
+                    <span class="trust-score-value" style="color: ${w.riskColor};">${displayText}</span>
+                </div>
+            `;
+        });
+    } else {
+        listHtml = '<div style="color: #888; text-align: center; padding: 10px;">No recursive wallets detected</div>';
+    }
+    document.getElementById('trustScoreList').innerHTML = listHtml;
+}
+
+function updateDevHistoryCard(devHistory) {
+    if (!devHistory) {
+        document.getElementById('devHistoryRisk').innerHTML = '⚪ NO DATA';
+        document.getElementById('devHistoryDesc').textContent = 'Could not fetch dev history';
+        return;
+    }
+    document.getElementById('devHistoryRisk').innerHTML = '🟢 ACTIVE';
+    document.getElementById('devHistoryDesc').textContent = devHistory.summary || 'Checking dev history...';
+    const statsHtml = `
+        <div style="margin-top: 10px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span style="color: #888;">Last 24h Coins:</span>
+                <span style="color: #fff;">${devHistory.totalCoins24h || 0}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span style="color: #888;">Highest ATH (24h):</span>
+                <span style="color: #00FFAD;">$${formatNumber(devHistory.highestAth24h || 0)}</span>
+            </div>
+        </div>
+    `;
+    const detailElement = document.getElementById('devHistoryDetail');
+    if (detailElement) {
+        detailElement.innerHTML = statsHtml;
+    }
+}
+
+async function refreshMarketCap() {
+    if (!currentCA) return;
+    const refreshBtn = document.getElementById('refreshMcapBtn');
+    const mcapSpan = document.getElementById('tokenMCap');
+    refreshBtn.classList.add('loading');
+    refreshBtn.textContent = '⟳';
+    try {
+        const response = await fetch(`/api/refresh-mcap/${currentCA}`);
+        const data = await response.json();
+        if (data.success) {
+            mcapSpan.textContent = `|| $${formatNumber(data.mcap)} MC`;
+            mcapSpan.style.transition = 'color 0.3s';
+            mcapSpan.style.color = '#00FFAD';
+            setTimeout(() => {
+                mcapSpan.style.color = '';
+            }, 500);
+        } else {
+            console.error('Refresh failed:', data.error);
+        }
+    } catch (error) {
+        console.error('Refresh error:', error);
+    } finally {
+        refreshBtn.classList.remove('loading');
+        refreshBtn.textContent = '🔄';
+    }
+}
+
+function connect() {
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    socket = new WebSocket(`${protocol}://${window.location.host}`);
+    socket.onopen = () => {
+        clearInterval(reconnectInterval);
+        document.getElementById('status').innerText = "READY";
+    };
+    socket.onclose = () => {
+        document.getElementById('status').innerText = "RECONNECTING...";
+        reconnectInterval = setTimeout(connect, 2000);
+    };
+    socket.onmessage = (e) => {
+        const d = JSON.parse(e.data);
+        if(d.type === "DEV_TRANSFER") {
+            triggerSlideNotif(d.shortWallet);
+        }
+        if(d.type === "RECURSIVE_TRACKING") {
+            const container = document.getElementById('notification-container');
+            const notif = document.createElement('div');
+            notif.className = 'transfer-notif';
+            notif.style.borderLeftColor = '#157DFF';
+            notif.innerHTML = `<strong style="color: #157DFF; font-size: 15px;">🔄 Recursive tracking Activated</strong><br>
+            <span style="font-size:11px; color:#888;">Tracking: </span>
+            <span class="shiny-address">${d.shortWallet || d.wallet?.slice(0,14)}...</span>`;
+            container.appendChild(notif);
+            setTimeout(() => notif.remove(), 10000);
+        }
+        if(d.type === "LIVE_TX" && d.mint === currentCA){
+            let displayAction = d.action;
+            let actionClass = d.action;
+            if (d.action === "TRANSFER_IN") displayAction = "RECEIVED 📥";
+            if (d.action === "TRANSFER_OUT") displayAction = "SENT 📤";
+            if (d.action === "BURN 🔥") displayAction = "BURN 🔥";
+            if (d.action === "LOCK 🔒") displayAction = "LOCK 🔒";
+            const row = `<tr>
+                <td class="${actionClass}" data-label="Action">${d.isDev ? 'DEV ' : ''}${displayAction} 
+                    <a href="https://solscan.io/tx/${d.signature}" target="_blank" class="tx-link">
+                        <img src="https://solscan.io/favicon.ico">
+                    </a>
+                </td>
+                <td data-label="Amount">${d.amount}</td>
+                <td data-label="Mcap">$${formatNumber(d.mcap)}</td>
+                <td data-label="Time">Just now</td>
+            </tr>`;
+            document.getElementById('txBody').insertAdjacentHTML('afterbegin', row);
+        }
+        if(d.type === "SUCCESS"){
+            currentCA = d.mint;
+            currentDevWallet = d.creator;
+            currentCreator = d.creator;
+            recursiveWallets = [];
+            const validTrades = d.trades || [];
+            displayedTrades = validTrades;
+            totalTradeCount = d.totalCount || validTrades.length;
+            hasMoreTrades = d.hasMore || false;
+            currentPage = d.currentPage || 1;
+            document.body.style.overflow = "auto";
+            document.getElementById('pageWrapper').style.height = "auto";
+            document.getElementById('pageWrapper').style.display = "block";
+            document.getElementById('pageWrapper').style.paddingTop = "40px";
+            document.getElementById('analysisCard').style.display = "block";
+            document.getElementById('tokenName').textContent = d.name; 
+            document.getElementById('tokenMCap').textContent = `|| $${formatNumber(d.mcap || 0)} MC`;
+            if(d.image) {
+                const img = document.getElementById('tokenImage');
+                img.src = d.image; 
+                img.style.display = "block";
+            }
+            const totalSupply = 1000000000;
+            let devHeld = 0;
+            validTrades.forEach(trade => {
+                let amount = 0;
+                if (trade.amount) {
+                    const match = trade.amount.match(/^([\d.]+)/);
+                    if (match) {
+                        amount = parseFloat(match[1]);
+                        if (trade.amount.includes('M')) amount *= 1000000;
+                        else if (trade.amount.includes('K')) amount *= 1000;
+                    }
+                }
+                if (trade.action === "CREATE" || trade.action === "BUY") {
+                    devHeld += amount;
+                }
+                if (trade.action === "SELL" || trade.action === "TRANSFER_OUT" || trade.action === "BURN 🔥") {
+                    devHeld -= amount;
+                }
+            });
+            const devPercentage = (devHeld / totalSupply) * 100;
+            const barWidth = Math.min(Math.max(devPercentage, 0), 100);
+            const holdHTML = `
+                <div class="hold-bar-container">
+                    <span style="color: #666; font-size: 9px; font-weight: 600; letter-spacing: 0.5px;">HOLD</span>
+                    <div style="width: 60px; height: 3px; background: #222; border-radius: 2px; overflow: hidden;">
+                        <div style="width: ${barWidth}%; height: 100%; background: #157DFF; border-radius: 2px;"></div>
+                    </div>
+                    <span style="color: #157DFF; font-size: 10px; font-weight: 900;">${devPercentage.toFixed(1)}%</span>
+                </div>
+            `;
+            const devHTML = `
+                <div class="dev-wallet-container">
+                    <span style="font-family: monospace; font-size: 11px; color: #888;">DEV: ${d.creator.slice(0,8)}...</span>
+                    <button class="copy-btn" onclick="copyToClipboard('${d.creator}')">COPY</button>
+                </div>
+            `;
+            document.getElementById('holdContainer').innerHTML = holdHTML;
+            document.getElementById('devWalletContainer').innerHTML = devHTML;
+            renderTradesPage(1, d.creator);
+            setupScrollPagination(d.creator);
+            document.getElementById('status').innerText = "NOW MONITORING...."; 
+        }
+        if(d.type === "ERROR") {
+            document.getElementById('status').innerText = "TOKEN NOT FOUND // RE-ENTER CA";
+        }
+    };
+}
+connect();
+
+function setupScrollPagination(creator) {
+    const tableWrapper = document.querySelector('.table-wrapper');
+    const scrollHandler = async () => {
+        if (isLoadingMore || !hasMoreTrades || !currentCA) return;
+        const scrollBottom = tableWrapper.scrollTop + tableWrapper.clientHeight;
+        const scrollThreshold = tableWrapper.scrollHeight - 150;
+        if (scrollBottom >= scrollThreshold) {
+            await loadMoreTrades(creator);
+        }
+    };
+    tableWrapper.addEventListener('scroll', scrollHandler);
+}
+
+async function loadMoreTrades(creator) {
+    if (isLoadingMore || !hasMoreTrades || !currentCA) return;
+    isLoadingMore = true;
+    const loadingRow = `<tr id="loading-row"><td colspan="4" style="text-align:center; padding:20px; color:#888;">Loading more transactions...</td></tr>`;
+    document.getElementById('txBody').insertAdjacentHTML('beforeend', loadingRow);
+    try {
+        const nextPage = currentPage + 1;
+        const response = await fetch(`/api/transactions/${currentCA}?page=${nextPage}&pageSize=20`);
+        const data = await response.json();
+        document.getElementById('loading-row')?.remove();
+        if (data.success && data.trades.length > 0) {
+            displayedTrades = [...displayedTrades, ...data.trades];
+            hasMoreTrades = data.hasMore;
+            currentPage = data.currentPage;
+            totalTradeCount = data.totalCount;
+            renderTradesPage(currentPage, creator);
+        } else {
+            hasMoreTrades = false;
+        }
+    } catch (error) {
+        console.error('Error loading more trades:', error);
+        document.getElementById('loading-row')?.remove();
+    } finally {
+        isLoadingMore = false;
+    }
+}
+
+function renderTradesPage(page, creator) {
+    const start = (page - 1) * TRADES_PER_PAGE;
+    const end = page * TRADES_PER_PAGE;
+    const pageTrades = displayedTrades.slice(0, end);
+    let oldestBuyIndex = -1;
+    let oldestTime = Infinity;
+    pageTrades.forEach((t, idx) => {
+        if (t.action === "BUY") {
+            const txTime = new Date(t.time).getTime();
+            if (txTime < oldestTime) {
+                oldestTime = txTime;
+                oldestBuyIndex = idx;
+            }
+        }
+    });
+    const html = pageTrades.map((t, index) => {
+        if(t.action === "TRANSFER_OUT" || t.action === "TRANSFER_IN" || t.action === "BURN 🔥" || t.action === "LOCK 🔒") {
+            triggerSlideNotif(t.recipient || t.signature);
+        }
+        let displayAction = t.action;
+        let actionClass = t.action;
+        if (index === oldestBuyIndex && t.action === "BUY") {
+            displayAction = "CREATE";
+            actionClass = "CREATE";
+        }
+        if (t.action === "TRANSFER_IN") displayAction = "RECEIVED 📥";
+        if (t.action === "TRANSFER_OUT") displayAction = "SENT 📤";
+        if (t.action === "BURN 🔥") displayAction = "BURN 🔥";
+        if (t.action === "LOCK 🔒") displayAction = "LOCK 🔒";
+        const devBadge = t.isDev ? `<span class="dev-tag">DEV</span>` : '';
+        const finalDisplayAction = displayAction;
+        return `<tr>
+            <td class="${actionClass}" data-label="Action">${finalDisplayAction} ${devBadge}
+                <a href="https://solscan.io/tx/${t.signature}" target="_blank" class="tx-link">
+                    <img src="https://solscan.io/favicon.ico">
+                </a>
+            </td>
+            <td data-label="Amount">${t.amount}</td>
+            <td data-label="Mcap">$${formatNumber(t.mcap)}</td>
+            <td data-label="Time">${formatTime(t.time)}</td>
+        </tr>`;
+    }).join("");
+    document.getElementById('txBody').innerHTML = html;
+    currentPage = page;
+    hasMoreTrades = displayedTrades.length < totalTradeCount;
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        const alert = document.getElementById('copy-alert');
+        alert.classList.add('show');
+        setTimeout(() => alert.classList.remove('show'), 2000);
+    });
+}
+
+function triggerSlideNotif(walletOrSig) {
+    if(!walletOrSig) return;
+    alertSound.currentTime = 0;
+    alertSound.play().catch(() => {});
+    const container = document.getElementById('notification-container');
+    const notif = document.createElement('div');
+    notif.className = 'transfer-notif';
+    const isWallet = walletOrSig.length < 50; 
+    notif.innerHTML = `<strong style="font-size:13px;">TRANSFER ALERT: Dev moved tokens!</strong><br>
+    <span style="font-size:10px; color:#666;">${isWallet ? 'To: ' : 'Sig: '}</span>
+    <span class="shiny-address">${walletOrSig.slice(0,14)}...</span>`;
+    container.appendChild(notif);
+    setTimeout(() => { 
+        notif.style.transform = 'translateX(120%)';
+        notif.style.opacity = '0'; 
+        setTimeout(() => notif.remove(), 400); 
+    }, 10000);
+}
+
+function formatNumber(v) { 
+    if (!v || v === 0) return '---'; 
+    if (v < 1000) return v.toFixed(1);
+    else if (v < 1000000) return (v / 1000).toFixed(1) + 'K';
+    else if (v < 1000000000) return (v / 1000000).toFixed(1) + 'M';
+    else return (v / 1000000000).toFixed(1) + 'B';
+}
+
+function formatTime(ts) {
+    if (!ts) return '---';
+    const past = new Date(ts);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - past) / 1000);
+    if (diffInSeconds < 60) return 'Just now';
+    const minutes = Math.floor(diffInSeconds / 60);
+    if (minutes < 60) return minutes + 'm ago';
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return hours + 'hr' + (hours > 1 ? 's' : '') + ' ago';
+    const days = Math.floor(hours / 24);
+    return days + 'd ago';
+}
+
+function fetchData(){
+    const ca = document.getElementById("tokenCA").value.trim();
+    if(ca){ 
+        if(socket && socket.readyState === WebSocket.OPEN) {
+            document.getElementById('status').innerText = "Analyzing...."; 
+            socket.send(JSON.stringify({tokenCA: ca})); 
+        }
+    }
+}
+
+// ===== MOBILE SWIPE GESTURES FOR TABS =====
+let touchStartX = 0;
+let touchEndX = 0;
+
+// Only activate on mobile
+if (window.innerWidth <= 768) {
+    const tabsContainer = document.querySelector('.tabs-container');
+    
+    tabsContainer.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    
+    tabsContainer.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+}
+
+function handleSwipe() {
+    const swipeDistance = touchEndX - touchStartX;
+    if (Math.abs(swipeDistance) < 60) return;
+    
+    const tabs = ['transactions', 'holders', 'recursive', 'risk'];
+    let currentIndex = tabs.findIndex(tab => {
+        if (tab === 'transactions') return document.getElementById('transactionsTable').style.display !== 'none';
+        if (tab === 'holders') return document.getElementById('holderContent').style.display !== 'none';
+        if (tab === 'recursive') return document.getElementById('recursiveContent').style.display !== 'none';
+        if (tab === 'risk') return document.getElementById('riskContent').style.display !== 'none';
+    });
+    
+    if (swipeDistance < 0) {
+        if (currentIndex < tabs.length - 1) {
+            switchTab(tabs[currentIndex + 1]);
+        }
+    } else {
+        if (currentIndex > 0) {
+            switchTab(tabs[currentIndex - 1]);
+        }
+    }
+}
+</script>
+</body>
+</html>

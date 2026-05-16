@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="favicon-32x32.png">
+    <title>PumpSkope | Documentation</title>
+    <style>
+        :root {
+            --bg-main: #0a0b0d;
+            --bg-card: #141619;
+            --accent-blue: #00AEEF;
+            --text-primary: #ffffff;
+            --text-secondary: #9da3ae;
+            --border-color: #2d333b;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .content-wrapper {
+            padding: 60px 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .logo-text {
+            font-size: 3rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+        }
+
+        .logo-text span {
+            color: var(--accent-blue);
+        }
+
+        .subtitle {
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            font-size: 1rem;
+            letter-spacing: 4px;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        .intro-p {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--border-color);
+            margin: 40px 0;
+        }
+
+        section {
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            color: var(--accent-blue);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, rgba(0,174,239,0.1) 0%, rgba(0,0,0,0) 100%);
+            padding: 12px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        p, li {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .feature-list li::before {
+            content: "→";
+            color: var(--accent-blue);
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .risk-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .risk-card strong {
+            display: block;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .nav-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .pill {
+            background: #1c1f24;
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .pill.active {
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent-blue);
+            margin: 30px 0;
+            padding: 15px 20px;
+            background: var(--bg-card);
+            font-style: italic;
+            border-radius: 0 10px 10px 0;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        strong {
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 600px) {
+            .content-wrapper {
+                padding: 40px 15px;
+            }
+            .logo-text {
+                font-size: 2.2rem;
+            }
+            .subtitle {
+                font-size: 0.8rem;
+                letter-spacing: 2px;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            h3 {
+                font-size: 1.1rem;
+            }
+            .risk-grid {
+                grid-template-columns: 1fr;
+            }
+            .pill {
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content-wrapper">
+        <header>
+            <div class="logo-text">Pump<span>Skope</span></div>
+            <div class="subtitle">On-Chain Intelligence</div>
+            <p class="intro-p">Documentation and technical overview of our real-time behavioral analysis engine.</p>
+        </header>
+
+        <section id="introduction">
+            <h2>System Architecture</h2>
+            <p>If you want to explore PumpSkope in greater depth, our documentation provides a structured overview of the platform's architecture.</p>
+            <ul class="feature-list">
+                <li>Feature architecture and analytical modules</li>
+                <li>Developer wallet tracking and behavioral flow analysis</li>
+                <li>Recursive wallet network detection</li>
+                <li>Risk signal engine and indicators</li>
+            </ul>
+            <p>We transform raw blockchain transactions into meaningful intelligence for traders and researchers.</p>
+        </section>
+
+        <hr>
+
+        <section id="dev-detection">
+            <h2>Developer Wallet Detection</h2>
+            <p>PumpSkope automatically identifies the <strong>developer wallet</strong> from the token creation transaction on Solana.</p>
+            
+            <h3>Continuous Monitoring</h3>
+            <p>Once identified, we monitor all activity:</p>
+            <ul class="feature-list">
+                <li>Token purchases and sales</li>
+                <li>Transfers to external wallets</li>
+                <li>Burns & Liquidity interactions</li>
+            </ul>
+            
+            <div class="nav-pills">
+                <div class="pill active">Dev Monitor</div>
+                <div class="pill">Holders</div>
+                <div class="pill">Recursive</div>
+                <div class="pill">Risk Engine</div>
+            </div>
+        </section>
+
+        <section id="recursive">
+            <h2>Recursive Wallet Detection</h2>
+            <p>We detect secondary wallets that receive tokens directly from the developer. If a wallet receives <strong>>0.9% of total supply</strong>, it is flagged as <strong>Recursive</strong>.</p>
+            
+            <h3>Common Patterns:</h3>
+            <ul class="feature-list">
+                <li>Insider allocations</li>
+                <li>Hidden distribution before trading</li>
+                <li>Multi-wallet selling strategies</li>
+            </ul>
+        </section>
+
+        <section id="holder-analysis">
+            <h2>Holder Analysis</h2>
+            <p>We scan the top holders for suspicious patterns like <strong>Top 10 Concentration</strong>. This helps you see if a small group controls the market via linked clusters. Each holder shows real-time buy/sell activity with timestamps.</p>
+        </section>
+
+        <section id="dev-holdings">
+            <h2>Dev Holdings</h2>
+            <p>Real-time visualization of how much supply the developer currently holds. The HOLD bar updates instantly with each transaction.</p>
+        </section>
+
+        <section id="risk-engine">
+            <h2>PumpSkope Risk Engine</h2>
+            <div class="risk-grid">
+                <div class="risk-card">
+                    <strong>Top 10 Velocity</strong>
+                    Volume analysis of the largest holders over 1 hour and 30 minute windows.
+                </div>
+                <div class="risk-card">
+                    <strong>Honeypot Detector</strong>
+                    Checks mint authority, freeze authority, and seller activity to determine if tokens can be sold.
+                </div>
+                <div class="risk-card">
+                    <strong>Recursive Trust Scores</strong>
+                    Risk rating for wallets that received >0.9% from dev—HIGH for >2% sold, MEDIUM for any sells, LOW for no sells.
+                </div>
+                <div class="risk-card">
+                    <strong>Dev History Index</strong>
+                    Tracks developer activity over the last 24 hours—total coins launched and highest market cap achieved.
+                </div>
+            </div>
+        </section>
+
+        <section id="technical">
+            <h2>Technical Stack</h2>
+            <ul class="feature-list">
+                <li><strong>Solana RPC:</strong> Direct chain connectivity.</li>
+                <li><strong>Helius API:</strong> Advanced indexing.</li>
+                <li><strong>Bitquery:</strong> Market cap and price data.</li>
+                <li><strong>Custom Engine:</strong> Behavioral analysis logic.</li>
+            </ul>
+        </section>
+
+        <section id="philosophy">
+            <h2>The Philosophy</h2>
+            <blockquote>
+                Charts are lagging indicators. PumpSkope focuses on behavioral intelligence—turning raw data into signals before they hit the chart.
+            </blockquote>
+        </section>
+
+        <footer>
+            &copy; 2026 PumpSkope | Zero-Latency On-Chain Intelligence
+        </footer>
+    </div>
+
+</body>
+</html>

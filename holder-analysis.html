@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PumpScope – Rug Detector</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #000000;
+            color: #FFFFFF;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #157DFF, #0b5ac7);
+            padding: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .navbar h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .search-container {
+            background: #111316;
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid #222531;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .search-input {
+            background: #1a1d24;
+            border: 2px solid #222531;
+            color: #FFFFFF;
+            padding: 14px;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #157DFF;
+            box-shadow: 0 0 0 3px rgba(21,125,255,0.2);
+        }
+        .search-input::placeholder {
+            color: #5a5f6b;
+        }
+        .search-btn {
+            background: #157DFF;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .search-btn:hover {
+            background: #0062D1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(21,125,255,0.4);
+        }
+        .search-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .result-card {
+            background: #111316;
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid #222531;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            color: #FFFFFF;
+        }
+        .token-name {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #157DFF;
+            margin-bottom: 0.5rem;
+        }
+        .token-symbol {
+            background: #1a1d24;
+            color: #FFFFFF;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            display: inline-block;
+            border: 1px solid #222531;
+        }
+        .wallet-address {
+            background: #1a1d24;
+            color: #157DFF;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            border: 1px solid #222531;
+            word-break: break-all;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .wallet-address:hover {
+            background: #222531;
+            color: #157DFF;
+        }
+        .holder-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            border-bottom: 1px solid #222531;
+            color: #FFFFFF;
+        }
+        .holder-row:last-child {
+            border-bottom: none;
+        }
+        .holder-row.selling {
+            background: rgba(21,125,255,0.15);
+            border-left: 4px solid #157DFF;
+        }
+        .insider-row {
+            background: rgba(255,75,75,0.1);
+            border-left: 4px solid #FF4B4B;
+        }
+        .network-badge {
+            background: #FF4B4B;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-left: 6px;
+            text-transform: uppercase;
+        }
+        .insider-group {
+            background: #1a1d24;
+            border: 1px solid #FF4B4B;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .insider-source {
+            color: #FF4B4B;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .insider-holder {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #333;
+        }
+        .insider-holder:last-child {
+            border-bottom: none;
+        }
+        .risk-factor {
+            background: #1a1d24;
+            color: #FFFFFF;
+            padding: 14px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #157DFF;
+            font-size: 1rem;
+        }
+        .loading {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #222531;
+            border-radius: 50%;
+            border-top-color: #157DFF;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .example-btn {
+            background: #1a1d24;
+            color: #FFFFFF;
+            border: 1px solid #222531;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .example-btn:hover {
+            background: #222531;
+            border-color: #157DFF;
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00FFAD;
+        }
+        .stat-label {
+            color: #9499a3;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .dev-badge {
+            background: #157DFF;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-left: 6px;
+        }
+        .text-muted-custom {
+            color: #9499a3 !important;
+        }
+        .sold-detail {
+            font-size: 0.85rem;
+            color: #9499a3;
+        }
+        .sold-amount {
+            color: #157DFF;
+            font-weight: 600;
+        }
+        #globalLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(4px);
+        }
+        .loader-content {
+            text-align: center;
+            color: white;
+        }
+        .loader-content .loading {
+            width: 48px;
+            height: 48px;
+            border-width: 4px;
+        }
+        .copy-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #157DFF;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            z-index: 10000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .alert-success {
+            background: rgba(0,255,173,0.1);
+            color: #00FFAD;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #00FFAD;
+        }
+        .alert-danger {
+            background: rgba(255,75,75,0.1);
+            color: #FF4B4B;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #FF4B4B;
+        }
+        .info-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: #157DFF;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 12px;
+            margin-left: 6px;
+            cursor: help;
+        }
+    </style>
+</head>
+<body>
+    <div id="globalLoader">
+        <div class="loader-content">
+            <div class="loading"></div>
+            <p style="margin-top: 20px; font-size: 1.2rem;">Analyzing on‑chain data...<br><small>This may take up to 60 seconds</small></p>
+        </div>
+    </div>
+
+    <div class="copy-toast" id="copyToast">Address copied to clipboard</div>
+
+    <div class="navbar">
+        <div class="container">
+            <h1>👥 PUMP SCOPE · HOLDER ANALYSIS</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="search-container">
+            <div class="row g-3">
+                <div class="col-md-9">
+                    <input type="text" class="search-input" id="tokenAddress" 
+                           placeholder="Paste token address or Pump.fun URL...">
+                </div>
+                <div class="col-md-3">
+                    <button class="search-btn" id="scanBtn">
+                        <span id="btnText">ANALYZE HOLDERS</span>
+                        <span id="btnLoader" style="display: none;" class="loading"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="mt-4">
+                <span class="text-muted-custom me-2">Test tokens:</span>
+                <button class="example-btn" onclick="fillExample('So11111111111111111111111111111111111111112')">Wrapped SOL</button>
+                <button class="example-btn" onclick="fillExample('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')">USDC</button>
+                <button class="example-btn" onclick="fillExample('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263')">BONK</button>
+            </div>
+        </div>
+
+        <div id="results"></div>
+        
+        <div id="initialState" class="text-center py-5">
+            <div style="font-size: 4rem; color: #222531;">👥</div>
+            <h3 style="color: #666; margin-top: 1rem;">Enter a token address to analyze</h3>
+            <p class="text-muted-custom">View top 10 holders, detect selling activity, and assess rug risk</p>
+        </div>
+
+        <div id="errorState" style="display: none;" class="alert alert-danger"></div>
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('copyToast');
+                toast.style.display = 'block';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        function fillExample(addr) {
+            document.getElementById('tokenAddress').value = addr;
+            scanToken();
+        }
+
+        document.getElementById('scanBtn').addEventListener('click', scanToken);
+        document.getElementById('tokenAddress').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') scanToken();
+        });
+
+        async function scanToken() {
+            const token = document.getElementById('tokenAddress').value.trim();
+            if (!token) {
+                alert('Please enter a token address');
+                return;
+            }
+
+            document.getElementById('globalLoader').style.display = 'flex';
+            document.getElementById('btnText').style.display = 'none';
+            document.getElementById('btnLoader').style.display = 'inline-block';
+            document.getElementById('scanBtn').disabled = true;
+            
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('initialState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'none';
+
+            try {
+                const response = await fetch('/api/analyze-holders', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({token_address: token})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResults(data);
+                } else {
+                    showError(data.error || 'Analysis failed');
+                }
+            } catch (err) {
+                showError('Network error: ' + err.message);
+            } finally {
+                document.getElementById('globalLoader').style.display = 'none';
+                document.getElementById('btnText').style.display = 'inline';
+                document.getElementById('btnLoader').style.display = 'none';
+                document.getElementById('scanBtn').disabled = false;
+            }
+        }
+
+        function displayResults(data) {
+            let html = '';
+
+            // Token Info
+            html += `
+                <div class="result-card">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="token-name">${data.token_name}</div>
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <span class="token-symbol">${data.token_symbol}</span>
+                                <span class="text-muted-custom">${data.token_preview}</span>
+                            </div>
+                            <div class="wallet-address" onclick="copyToClipboard('${data.token_address}')">${data.token_address}</div>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <div class="stat-label">Total Supply</div>
+                            <div class="stat-value">${data.total_supply}</div>
+                            <div class="stat-label mt-3">Holders</div>
+                            <div class="fs-3 fw-bold" style="color: #00FFAD;">${data.total_holders}</div>
+                            <div class="stat-label mt-3">Top 10</div>
+                            <div class="fs-3 fw-bold" style="color: #00FFAD;">${data.top_10_concentration}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Risk Score
+            html += `
+                <div class="result-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="stat-label mb-2">RUG RISK SCORE</div>
+                            <div style="font-size: 5rem; font-weight: 800; color: ${data.risk_color}">${data.risk_score}</div>
+                            <div style="font-size: 2rem; font-weight: 600; color: ${data.risk_color}">${data.risk_level}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div style="background: #1a1d24; padding: 1.5rem; border-radius: 12px; border-left: 4px solid ${data.risk_color};">
+                                <strong style="font-size: 1.2rem;">${data.recommendation}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Developer Wallet
+            html += `
+                <div class="result-card">
+                    <h4 class="mb-3" style="color: #157DFF;">👤 DEVELOPER WALLET</h4>
+                    <div class="wallet-address mb-3" onclick="copyToClipboard('${data.dev_wallet_full || data.dev_wallet}')">${data.dev_wallet}</div>
+                    ${data.dev_wallet !== 'Not found' ? 
+                        '<div class="alert-success">✅ Developer identified</div>' : 
+                        '<div class="alert-danger">🚨 Developer not identified</div>'}
+                </div>
+            `;
+
+            // 🔥 NEW: Insider Networks Section
+            if (data.insider_networks && data.insider_networks.length > 0) {
+                html += `<div class="result-card"><h4 class="mb-3" style="color: #FF4B4B;">🔗 INSIDER NETWORKS DETECTED</h4>`;
+                html += `<p class="text-muted-custom mb-3">Multiple top holders funded by same wallets - possible coordinated group</p>`;
+                
+                data.insider_networks.forEach(network => {
+                    html += `
+                        <div class="insider-group">
+                            <div class="insider-source">
+                                <span class="network-badge">SOURCE</span>
+                                <span class="wallet-address ms-2" style="display: inline-block; background: transparent; border: none; padding: 0;" onclick="copyToClipboard('${network.full_source || network.source}')">
+                                    ${network.source}
+                                </span>
+                            </div>
+                            <div style="margin-bottom: 8px; color: #FF4B4B;">
+                                <strong>${network.holder_count} holders · ${network.total_percentage}% of supply</strong>
+                            </div>
+                    `;
+                    
+                    network.holders.forEach(holder => {
+                        html += `
+                            <div class="insider-holder">
+                                <span>
+                                    <strong>#${holder.rank}</strong>
+                                    <span class="wallet-address ms-2" style="display: inline-block; background: transparent; border: none; padding: 0;" onclick="copyToClipboard('${holder.address}')">
+                                        ${holder.address}
+                                    </span>
+                                </span>
+                                <span>${holder.percentage.toFixed(2)}%</span>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div>`;
+                });
+                html += `</div>`;
+            }
+
+            // Top Holders
+            if (data.top_holders && data.top_holders.length > 0) {
+                html += `<div class="result-card"><h4 class="mb-3" style="color: #157DFF;">👥 TOP 10 HOLDERS</h4>`;
+                data.top_holders.forEach(h => {
+                    const fullAddress = h.full_address || h.address;
+                    // Check if this holder is part of any insider network
+                    const isInsider = data.insider_networks?.some(network => 
+                        network.holders.some(holder => holder.address === h.address)
+                    );
+                    
+                    html += `
+                        <div class="holder-row ${h.is_selling ? 'selling' : ''} ${isInsider ? 'insider-row' : ''}">
+                            <div style="flex: 1;">
+                                <strong>#${h.rank}</strong>
+                                <span class="wallet-address ms-2" style="display: inline-block; background: transparent; border: none; padding: 0;" onclick="copyToClipboard('${fullAddress}')">
+                                    ${h.address}
+                                    ${h.is_dev ? '<span class="dev-badge">DEV</span>' : ''}
+                                    ${isInsider ? '<span class="network-badge">INSIDER</span>' : ''}
+                                </span>
+                                ${h.is_selling ? 
+                                    `<div class="sold-detail mt-1">
+                                        <span class="sold-amount">📉 Sold ${h.sold_amount} (${h.sold_percentage}%)</span>
+                                    </div>` : ''}
+                            </div>
+                            <div style="text-align: right; min-width: 150px;">
+                                <div style="font-weight: 600;">${h.balance}</div>
+                                <div class="text-muted-custom" style="font-size: 0.9rem;">${h.percentage}%</div>
+                                ${h.is_selling ? '<div class="text-danger mt-1"><strong>🔴 SELLING</strong></div>' : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            // Risk Factors
+            if (data.risk_factors && data.risk_factors.length > 0) {
+                html += `<div class="result-card"><h4 class="mb-3" style="color: #157DFF;">⚠️ RISK FACTORS</h4>`;
+                data.risk_factors.forEach(f => {
+                    // Highlight insider risk factors
+                    const isInsiderRisk = f.includes('INSIDER') || f.includes('funded by same');
+                    html += `<div class="risk-factor" style="${isInsiderRisk ? 'border-left-color: #FF4B4B; background: rgba(255,75,75,0.1);' : ''}">${f}</div>`;
+                });
+                html += `</div>`;
+            }
+
+            html += `<div class="text-muted-custom text-end mb-4">Analyzed: ${data.analysis_time}</div>`;
+
+            document.getElementById('results').innerHTML = html;
+        }
+
+        function showError(msg) {
+            document.getElementById('errorState').innerHTML = `<strong>Error:</strong> ${msg}`;
+            document.getElementById('errorState').style.display = 'block';
+            document.getElementById('initialState').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
