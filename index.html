@@ -1824,7 +1824,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const intro = document.getElementById("pumpscopeIntro");
     const enterBtn = document.getElementById("enterPumpScope");
     
-    // Check if user has seen intro before
+  
     if(!localStorage.getItem("pumpscope_intro_seen")){
         intro.style.display = "flex";
     } else {
@@ -1868,7 +1868,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Initialize scroll hint for mobile
+  
     const tabsContainer = document.querySelector('.tabs-container');
     if (tabsContainer) {
         tabsContainer.addEventListener('scroll', function() {
@@ -2185,7 +2185,7 @@ function updateVelocityCard(velocity) {
     document.getElementById('velocityTrend').innerHTML = velocity.verdict;
     document.getElementById('velocityDesc').textContent = velocity.reason || '';
     
-    // NEW CLEAN VERSION - No brackets, just counts
+  
     const statsHtml = `
         <div style="margin-top: 15px;">
             <div style="margin-bottom: 12px;">
@@ -2587,7 +2587,7 @@ function fetchData(){
 let touchStartX = 0;
 let touchEndX = 0;
 
-// Only activate on mobile
+
 if (window.innerWidth <= 768) {
     const tabsContainer = document.querySelector('.tabs-container');
     
